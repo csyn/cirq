@@ -5,7 +5,15 @@ A circular queue implementation for microcontrollers
 Cirq allows you to push and pop form both ends of the queue and also to peek at,
 and place characters anywhere in between.
 
-In this queue implementation tail should always points to a value of no
+## Usage ##
+
+The makefile and `cirq_test.c` are just for testing. The tests are run by issuing the command `make` or `make test` in the base directory of this project, note that this requires GNU Make and GCC (or equivalents). Clean up is done using the command `make clean`
+
+If you wish to include this software in your project, you will only require `cirq.h`
+
+## Functionality ##
+
+In this queue implementation tail should always point to a value of no
 consequence, head points to a 'given value', except when the queue is empty.
 
 `static inline struct cirq cirq_init(const size_t width,
