@@ -45,8 +45,8 @@ static inline struct cirq cirq_init(const size_t width,
         .buffer = buffer,
         .buffer_limit = limit,
         .buffer_max = limit - 1,
-        .head = (unsigned char *volatile)cirq.buffer,
-        .tail = (unsigned char *volatile)cirq.buffer
+        .head = (unsigned char *volatile)buffer,
+        .tail = (unsigned char *volatile)buffer
     };
     return cirq;
 }
@@ -94,7 +94,7 @@ static inline void cirq_push_front(struct cirq* const c,
 {
     volatile unsigned char* const head = c->head;
     volatile unsigned char* const p = (head == c->buffer) ? c->buffer_max :
-        head - 1; // this has const issues?
+        head - 1;
     *p = item;
     c->head = p;
 }
