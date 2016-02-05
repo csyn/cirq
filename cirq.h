@@ -45,8 +45,8 @@ static inline struct cirq cirq_init(const size_t width,
         .buffer = buffer,
         .buffer_limit = limit,
         .buffer_max = limit - 1,
-        .head = (unsigned char *volatile)buffer,
-        .tail = (unsigned char *volatile)buffer
+        .head = buffer,
+        .tail = buffer
     };
     return cirq;
 }
