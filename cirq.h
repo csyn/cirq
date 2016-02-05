@@ -38,7 +38,7 @@ struct cirq
 };
 
 static inline struct cirq cirq_init(const size_t width,
-    volatile unsigned char* buffer)
+                                    volatile unsigned char* buffer)
 {
     volatile unsigned char* limit = buffer + width;
     struct cirq cirq = {
@@ -51,7 +51,7 @@ static inline struct cirq cirq_init(const size_t width,
     return cirq;
 }
 
-static inline char cirq_empty(const struct cirq* const c)
+static inline char cirq_empty(const struct cirq * const c)
 {
     return (c->head == c->tail) ? 1 : 0;
 }
@@ -59,19 +59,20 @@ static inline char cirq_empty(const struct cirq* const c)
 // this space function returns one less than the actual space available, because
 // when the buffer is (actually) full, head == tail and it is indistinguishable
 // from an empty buffer.
-static inline size_t cirq_space(const struct cirq* const c)
+
+static inline size_t cirq_space(const struct cirq * const c)
 {
     return (c->tail >= c->head) ? ((c->buffer_limit - c->tail) +
             (c->head - c->buffer)) - 1 : (c->head - c->tail) - 1;
 }
 
-static inline size_t cirq_population(const struct cirq* const c)
+static inline size_t cirq_population(const struct cirq * const c)
 {
     return (c->tail >= c->head) ? c->tail - c->head :
-    (c->buffer_limit - c->head) + (c->tail - c->buffer);
+            (c->buffer_limit - c->head) + (c->tail - c->buffer);
 }
 
-static inline void cirq_flush(struct cirq* const c)
+static inline void cirq_flush(struct cirq * const c)
 {
     c->tail = c->head;
 }
@@ -80,8 +81,9 @@ static inline void cirq_flush(struct cirq* const c)
 // the queue is empty.
 
 // increments tail
-static inline void cirq_push_back(struct cirq* const c,
-    const unsigned char item)
+
+static inline void cirq_push_back(struct cirq * const c,
+                                  const unsigned char item)
 {
     volatile unsigned char* const p = c->tail;
     *p = item;
@@ -89,36 +91,39 @@ static inline void cirq_push_back(struct cirq* const c,
 }
 
 // decrements head
-static inline void cirq_push_front(struct cirq* const c,
-    const unsigned char item)
+
+static inline void cirq_push_front(struct cirq * const c,
+                                   const unsigned char item)
 {
     volatile unsigned char* const head = c->head;
     volatile unsigned char* const p = (head == c->buffer) ? c->buffer_max :
-        head - 1;
+            head - 1;
     *p = item;
     c->head = p;
 }
 
 // decremenets tail
-static inline unsigned char cirq_pop_back(struct cirq* const c)
+
+static inline unsigned char cirq_pop_back(struct cirq * const c)
 {
     volatile unsigned char* const tail = c->tail;
     volatile unsigned char* const p = (tail == c->buffer) ?
-        c->buffer_max : tail - 1;
+            c->buffer_max : tail - 1;
     c->tail = p;
     return *p;
 }
 
 // increments head
-static inline unsigned char cirq_pop_front(struct cirq* const c)
+
+static inline unsigned char cirq_pop_front(struct cirq * const c)
 {
     volatile unsigned char* const p = c->head;
     c->head = (p == c->buffer_max) ? c->buffer : p + 1;
     return *p;
 }
 
-static inline unsigned char cirq_peek_back(const struct cirq* const c,
-    const size_t index)
+static inline unsigned char cirq_peek_back(const struct cirq * const c,
+                                           const size_t index)
 {
     volatile unsigned char* const tail = c->tail;
     volatile unsigned char* p;
@@ -135,18 +140,18 @@ static inline unsigned char cirq_peek_back(const struct cirq* const c,
     return *p;
 }
 
-static inline unsigned char cirq_peek_front(const struct cirq* const c,
-    const size_t index)
+static inline unsigned char cirq_peek_front(const struct cirq * const c,
+                                            const size_t index)
 {
     volatile unsigned char* const head = c->head;
     size_t offset = c->buffer_limit - head;
     volatile unsigned char* const p = (offset > index) ? head + index :
-        c->buffer + (index - offset);
+            c->buffer + (index - offset);
     return *p;
 }
 
-static inline void cirq_place_back(struct cirq* const c,
-    const unsigned char item, const size_t index)
+static inline void cirq_place_back(struct cirq * const c,
+                                   const unsigned char item, const size_t index)
 {
     volatile unsigned char* const tail = c->tail;
     volatile unsigned char* p;
@@ -163,13 +168,14 @@ static inline void cirq_place_back(struct cirq* const c,
     *p = item;
 }
 
-static inline void cirq_place_front(struct cirq* const c,
-    const unsigned char item, const size_t index)
+static inline void cirq_place_front(struct cirq * const c,
+                                    const unsigned char item,
+                                    const size_t index)
 {
     volatile unsigned char* const head = c->head;
     size_t offset = c->buffer_limit - head;
     volatile unsigned char* const p = (offset > index) ? head + index :
-        c->buffer + (index - offset);
+            c->buffer + (index - offset);
     *p = item;
 }
 
